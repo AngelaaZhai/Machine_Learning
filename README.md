@@ -1,4 +1,4 @@
-# Airbnb
+# Statistical Learning
 
 Follow tutorial of Standford University Statistical Learning
 
