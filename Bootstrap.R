@@ -20,3 +20,6 @@ alpha.fn(airbnb, sample(1:100, 100, replace=TRUE))
 boot.out = boot(airbnb, alpha.fn, R=1000)
 boot.out
 plot(boot.out)
+
+## Bootstrapping of time series (block bootstrap)
+## Function tsboot()
