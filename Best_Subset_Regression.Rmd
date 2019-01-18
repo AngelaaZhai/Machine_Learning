@@ -1,0 +1,47 @@
+---
+title: "Best_Subset_Regression"
+author: "Angela Zhai"
+date: "1/17/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ISLR)
+library(tidyverse)
+airbnb <- read_csv("s3_files/boston/tomslee_airbnb_boston_0054_2014-09-24.csv")
+airbnb$type_factor <- factor(airbnb$room_type)
+airbnb <- airbnb %>%
+  mutate(positive = factor(ifelse(overall_satisfaction>4.5, "Perfect", "Good"))) %>%
+  filter(!is.na(positive))
+summary(airbnb)
+```
+
+```{r}
+with(airbnb, sum(is.na(reviews)))
+```
+
+Best Subset regression
+------------------------
+We will now use the package `leaps` to evaluate all the best-subset models.
+```{r}
+library(leaps)
+airbnb_fit <- airbnb %>%
+  dplyr::select(-room_id, -host_id, -room_type, -borough, -last_modified, -positive, -neighborhood)
+regfit.full = regsubsets(price ~ ., data=airbnb_fit)
+reg.summary = summary(regfit.full)
+names(reg.summary)
+plot(reg.summary$cp, xlab="Number of Variables", ylab="Cp")
+which.min(reg.summary$cp)
+points(8, reg.summary$cp[8], pch=20, col="red")
+```
+It gives by default best-subset up to size 8
+
+There is a plot method for the `regsubset` object
+```{r}
+plot(regfit.full, scale="Cp")
+coef(regfit.full, 8)
+```
